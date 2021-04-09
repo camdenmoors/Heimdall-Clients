@@ -1,0 +1,183 @@
+---
+  openapi: "3.0.0"
+  info: 
+    version: "2.0"
+    title: "Heimdall Server"
+    description: "Heimdall Enterprise Server 2 lets you view, store, and compare automated security control scan results."
+  servers: 
+    - 
+      url: "http://127.0.0.1:3000/"
+      variables: 
+        scheme: 
+          enum: 
+            - "https"
+            - "http"
+          default: "http"
+        basePath: 
+          default: ""
+  tags: 
+    - 
+      name: "groups"
+    - 
+      name: "users"
+    - 
+      name: "authn"
+  components: 
+    schemas: 
+      ErrorModel: 
+        type: "object"
+        properties: 
+          statusCode: 
+            type: "string"
+          message:
+            type: "string"
+          error:
+            type: "string"
+    securitySchemes: 
+      JWT: 
+        description: "You can create a JSON Web Token (JWT) during auth.\nUsage format: `Bearer <JWT>`\n"
+        name: "Authorization"
+        type: "apiKey"
+        in: "header"
+  paths: 
+    /groups/my: 
+      get: 
+        security: 
+          - 
+            JWT: []
+        tags: 
+          - "groups"
+        summary: "groups"
+        parameters: []
+        responses: 
+          401: 
+            description: "Unauthorized"
+            content: 
+              application/json: 
+                schema: 
+                  type: "object"
+                  properties: 
+                    statusCode: 
+                      type: "number"
+                    message: 
+                      type: "string"
+                example: 
+                  statusCode: 401
+                  message: "Unauthorized"
+          default: 
+            description: "Unexpected error"
+            content: 
+              application/json: 
+                example: 
+                  message: "Sorry unable to perform operation."
+    /users: 
+      post: 
+        security: []
+        tags: 
+          - "users"
+        summary: "users"
+        parameters: []
+        requestBody: 
+          required: true
+          content: 
+            application/json: 
+              schema: 
+                type: "object"
+                properties: 
+                  email: 
+                    type: "string"
+                  password: 
+                    type: "string"
+                  passwordConfirmation: 
+                    type: "string"
+                  role: 
+                    type: "string"
+                  creationMethod: 
+                    type: "string"
+              example: 
+                email: "user@example.com"
+                password: "89/e&f`-Y4dcwJZ&"
+                passwordConfirmation: "89/e&f`-Y4dcwJZ&"
+                role: "user"
+                creationMethod: "local"
+        responses: 
+          201: 
+            description: "Created"
+            content: 
+              application/json: 
+                schema: 
+                  type: "object"
+                  properties: 
+                    id: 
+                      type: "string"
+                    email: 
+                      type: "string"
+                    firstName: 
+                      type: "string"
+                    lastName: 
+                      type: "string"
+                    title: 
+                      type: "string"
+                    role: 
+                      type: "string"
+                    organization: 
+                      type: "string"
+                    loginCount: 
+                      type: "number"
+                    lastLogin: 
+                      type: "string"
+                    creationMethod: 
+                      type: "string"
+                    createdAt: 
+                      type: "string"
+                    updatedAt: 
+                      type: "string"
+                example: 
+                  id: "14"
+                  email: "user@example.com"
+                  firstName: null
+                  lastName: null
+                  title: null
+                  role: "user"
+                  organization: null
+                  loginCount: 0
+                  lastLogin: null
+                  creationMethod: "local"
+                  createdAt: "2021-04-09T18:12:00.713Z"
+                  updatedAt: "2021-04-09T18:12:00.713Z"
+    /authn/login: 
+      post: 
+        security: []
+        tags: 
+          - "authn"
+        summary: "authn"
+        parameters: []
+        requestBody: 
+          required: true
+          content: 
+            application/json: 
+              schema: 
+                type: "object"
+                properties: 
+                  email: 
+                    type: "string"
+                  password: 
+                    type: "string"
+              example: 
+                email: "user@example.com"
+                password: "89/e&f`-Y4dcwJZ&"
+        responses: 
+          201: 
+            description: "Created"
+            content: 
+              application/json: 
+                schema: 
+                  type: "object"
+                  properties: 
+                    userID: 
+                      type: "string"
+                    accessToken: 
+                      type: "string"
+                example: 
+                  userID: "14"
+                  accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJzdWIiOiIxNCIsInJvbGUiOiJ1c2VyIiwiZm9yY2VQYXNzd29yZENoYW5nZSI6bnVsbCwiaWF0IjoxNjE3OTkyNDc0LCJleHAiOjE2MTc5OTYwNzR9.PkJ4JJ0H7xT6O3Wu8NQT3ruFU66_tkqThr9lIEVJNzU"
